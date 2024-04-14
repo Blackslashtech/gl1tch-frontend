@@ -14,7 +14,7 @@ const LoginPage: FC = () => {
     const password = (event.currentTarget.elements.namedItem('password') as HTMLInputElement).value;
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push('/dashboard');
+      router.push('../../dashboard');
     } catch (error) {
       console.error(error);
     }
@@ -31,7 +31,7 @@ const LoginPage: FC = () => {
         <input type="password" name="password" required />
       </label>
       <button type="submit">Log In</button>
-      <Link href="/register" passHref>
+      <Link href="../../auth/signup" passHref>
         <p>Need an account? Register</p>
       </Link>
     </form>
