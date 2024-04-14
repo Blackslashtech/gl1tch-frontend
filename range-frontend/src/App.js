@@ -1,6 +1,7 @@
 // src/App.js
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import LandingPage from './LandingPage';
 import SignUp from './SignUp';
 import SignIn from './SignIn';
 import Home from './Home';
@@ -12,11 +13,7 @@ const App = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-      } else {
-        setCurrentUser(null);
-      }
+      setCurrentUser(user);
     });
 
     // Cleanup subscription on unmount
@@ -26,9 +23,10 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/" element={currentUser ? <Home /> : <Navigate to="/signin" />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/signup" element={currentUser ? <Navigate to="/" /> : <SignUp />} />
+        <Route path="/signin" element={currentUser ? <Navigate to="/" /> : <SignIn />} />
+        <Route path="/home" element={currentUser ? <Home /> : <Navigate to="/" />} />
       </Routes>
     </Router>
   );
