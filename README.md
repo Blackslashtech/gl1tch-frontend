@@ -1,6 +1,5 @@
 
 <div align="center">
-  <img src="https://YOUR_LOGO_URL" alt="Gl1tch Logo" width="200px" />
   <h1>Gl1tch Frontend</h1>
 </div>
 
