@@ -32,7 +32,7 @@ const LoginPage: FC = () => {
       </label>
       <button type="submit">Log In</button>
       <Link href="/register" passHref>
-        <a>Need an account? Register</a>
+        <p>Need an account? Register</p>
       </Link>
     </form>
   );
