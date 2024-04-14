@@ -1,5 +1,6 @@
 // src/SignUp.js
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import auth from './firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
@@ -7,13 +8,16 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSignUp = async (event) => {
     event.preventDefault();
     setError('');
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      alert('Account created successfully!');
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      if (userCredential.user) {
+        navigate('/'); // Navigate to home after account creation and automatic login
+      }
     } catch (error) {
       setError(error.message);
     }
