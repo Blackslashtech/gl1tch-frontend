@@ -1,10 +1,10 @@
 // src/App.js
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import LandingPage from './LandingPage';
-import SignUp from './SignUp';
-import SignIn from './SignIn';
-import Home from './Home';
+import LandingPage from './components/landing/LandingPage';
+import SignUp from './components/auth/SignUp';
+import SignIn from './components/auth/SignIn';
+import Home from './components/dashboard/Home';
 import auth from './firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 
