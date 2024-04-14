@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { auth } from '../lib/firebase';
 import { signOut } from 'firebase/auth';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 const Dashboard: FC = () => {
   const router = useRouter();

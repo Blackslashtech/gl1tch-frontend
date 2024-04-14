@@ -1,17 +1,19 @@
+"use client";
 import { FC, FormEvent } from 'react';
+import Link from 'next/link';
 import { auth } from '../../lib/firebase';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { useRouter } from 'next/router';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
 
-const RegisterPage: FC = () => {
+const LoginPage: FC = () => {
   const router = useRouter();
 
-  const handleRegister = async (event: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const email = (event.currentTarget.elements.namedItem('email') as HTMLInputElement).value;
     const password = (event.currentTarget.elements.namedItem('password') as HTMLInputElement).value;
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth, email, password);
       router.push('/dashboard');
     } catch (error) {
       console.error(error);
@@ -19,7 +21,7 @@ const RegisterPage: FC = () => {
   };
 
   return (
-    <form onSubmit={handleRegister}>
+    <form onSubmit={handleLogin}>
       <label>
         Email:
         <input type="email" name="email" required />
@@ -28,9 +30,12 @@ const RegisterPage: FC = () => {
         Password:
         <input type="password" name="password" required />
       </label>
-      <button type="submit">Register</button>
+      <button type="submit">Log In</button>
+      <Link href="/register" passHref>
+        <a>Need an account? Register</a>
+      </Link>
     </form>
   );
 };
 
-export default RegisterPage;
+export default LoginPage;
