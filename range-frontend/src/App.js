@@ -7,6 +7,9 @@ import SignIn from './components/auth/SignIn';
 import Home from './components/dashboard/Home';
 import auth from './firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
+// In your App.js or the relevant component file
+import './App.css';
+
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);

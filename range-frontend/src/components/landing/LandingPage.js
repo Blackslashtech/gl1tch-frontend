@@ -1,69 +1,69 @@
 // src/LandingPage.js
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../../firebaseConfig'; // Ensure this import points to your configured Firebase instance
 
 const LandingPage = () => {
+  const [emailForUpdates, setEmailForUpdates] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = () => {
     navigate('/signin');
   };
 
-  const pageStyles = {
-    backgroundColor: '#121212', // Dark background color
-    color: 'white', // Text color
-    fontFamily: 'Arial, sans-serif', // Font family
-    minHeight: '100vh',
-    position: 'relative'
+  const handleEmailChange = (e) => {
+    setEmailForUpdates(e.target.value);
+    setIsSubmitted(false); // Allow the user to sign up again
   };
 
-  const headerStyles = {
-    padding: '20px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  const loginButtonStyle = {
-    padding: '10px 20px',
-    backgroundColor: '#0D7377', // Teal-like button color
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer'
-  };
+    try {
+      await addDoc(collection(db, 'updates'), {
+        email: emailForUpdates,
+      });
+      setIsSubmitted(true);
+      setEmailForUpdates('');
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    }
 
-  const mainContentStyles = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 'calc(100vh - 60px)', // Adjust height based on header/footer size
-    textAlign: 'center'
-  };
-
-  const placeholderImageStyle = {
-    backgroundColor: '#333333', // Placeholder for images
-    width: '80%',
-    height: '200px',
-    margin: '20px 0',
-    borderRadius: '8px'
+    setIsSubmitting(false);
   };
 
   return (
-    <div style={pageStyles}>
-      <div style={headerStyles}>
+    <div className="landing-page">
+      <div className="header">
         <h1>GL1TCH</h1>
-        <button onClick={handleLogin} style={loginButtonStyle}>Login</button>
+        <button onClick={handleLogin} className="login-button">Login</button>
       </div>
-      <div style={mainContentStyles}>
+      <div className="main-content">
         <h2>Attack Defense. For Everyone.</h2>
-        <div style={placeholderImageStyle}></div> {/* Placeholder for main image */}
+        <div className="placeholder-image"></div>
         <p>Infrastructure. That just works.</p>
         <p>No more faulty checkers and broken NAT. Spend more time breaking things you're supposed to break, and less time fixing the things you're not.</p>
-        {/* More content sections would follow here... */}
+        <div className="updates-form">
+          <form onSubmit={handleSubmit}>
+            <input
+              type="email"
+              placeholder="Your email for updates"
+              value={emailForUpdates}
+              onChange={handleEmailChange}
+              className="updates-input"
+              disabled={isSubmitting}
+            />
+            <button type="submit" className="submit-button" disabled={isSubmitting}>
+              {isSubmitted ? 'Submitted!' : 'Sign Up'}
+            </button>
+          </form>
+          {isSubmitted && <p className="submission-message">Thanks for signing up! Check your inbox for updates.</p>}
+        </div>
       </div>
-      {/* Footer or additional content goes here */}
     </div>
   );
 };
