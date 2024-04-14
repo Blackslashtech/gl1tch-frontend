@@ -64,6 +64,18 @@ This project uses Firebase Authentication to manage user sessions. Users can:
 
 ---
 
+## :key: Test Credentials
+
+To explore the full functionality of Gl1tch Frontend without signing up, use the following test credentials:
+
+- `email@email.com:password`
+- `email2@email.com:password`
+
+Please note these accounts are publicly available, so do not store any personal or sensitive information while using them.
+
+---
+
+
 ## :wrench: Configuration
 
 To customize the Firebase configuration, edit the `firebaseConfig.js` file with your project-specific settings:
