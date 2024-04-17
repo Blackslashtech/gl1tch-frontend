@@ -1,3 +1,5 @@
+"use client";
+
 import { FC } from 'react';
 import { auth } from '../lib/firebase';
 import { signOut } from 'firebase/auth';
