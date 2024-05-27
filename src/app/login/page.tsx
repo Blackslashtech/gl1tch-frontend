@@ -1,6 +1,9 @@
-'use client'
+"use client";
 
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { useState, FormEvent } from "react";
+import { UserAuthForm } from "../components/user-auth-form";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -13,43 +16,53 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="px-8 py-6 mt-4 text-left bg-white shadow-lg w-96 rounded-md">
-        <h3 className="text-2xl font-bold text-center">Login</h3>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label className="block" htmlFor="username">
-              Username
-            </label>
-            <input
-              type="text"
-              placeholder="Username"
-              id="username"
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-            />
+    <div className="container relative hidden h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+      <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r border-primary-dark border-b-0">
+        <div className="absolute inset-0 bg-zinc-900" />
+        <div className="relative z-20 mt-auto">
+          <blockquote className="space-y-5">
+            <p className="text-lg">
+              Glitch Range is a unified cyber attack/defense range for deploying
+              training, testing, and competitions. It supports a variety of
+              existing attack/defense deployment frameworks, including FAUST,
+              CINI, and SECCONF.
+            </p>
+            <footer className="flex flex-row text-sm gap-2">
+              <p className="leading-none">Learn more</p>
+              <ArrowRight className="h-4 w-4" />
+            </footer>
+          </blockquote>
+        </div>
+      </div>
+      <div className="lg:p-8">
+        <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+          <div className="flex flex-col space-y-2 text-center">
+            <h1 className="text-2xl font-semibold tracking-tight">
+              Create an account
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Enter your email below to create your account
+            </p>
           </div>
-          <div className="mt-4">
-            <label className="block" htmlFor="password">
-              Password
-            </label>
-            <input
-              type="password"
-              placeholder="Password"
-              id="password"
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-            />
-          </div>
-          <div className="flex items-baseline justify-between">
-            <button
-              type="submit"
-              className="px-6 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-900"
+          <UserAuthForm />
+          <p className="px-8 text-center text-sm text-muted-foreground">
+            By clicking continue, you agree to our{" "}
+            <Link
+              href="/terms"
+              className="underline underline-offset-4 hover:text-primary"
             >
-              Login
-            </button>
-          </div>
-        </form>
+              Terms of Service
+            </Link>{" "}
+            and{" "}
+            <Link
+              href="/privacy"
+              className="underline underline-offset-4 hover:text-primary"
+            >
+              Privacy Policy
+            </Link>
+            .
+          </p>
+        </div>
       </div>
     </div>
   );
