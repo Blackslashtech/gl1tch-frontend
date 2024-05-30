@@ -1,6 +1,7 @@
 "use client";
 import { HoverEffect } from "../../components/ui/card-hover-effect";
-import Header from "../components/Header"; 
+import Header from "../components/Header";
+import { SparklesCore } from "@/components/ui/sparkles";
 
 export const dashboardItems = [
   {
@@ -37,10 +38,21 @@ export const dashboardItems = [
 
 const Dashboard = () => {
   return (
-    <div className="container mx-auto p-4">
+    <div className="relative container mx-auto p-4">
       <Header />
-      <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-4 text-center text-white">Dashboard</h1>
       <HoverEffect items={dashboardItems} />
+      <div className="absolute inset-0 h-full -z-10">
+        <SparklesCore
+          id="dashboard-bg"
+          background="transparent"
+          minSize={0.1}
+          maxSize={0.4}
+          particleDensity={50}
+          className="w-full h-full"
+          particleColor="#888"
+        />
+      </div>
     </div>
   );
 };
