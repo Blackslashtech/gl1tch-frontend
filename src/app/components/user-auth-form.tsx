@@ -1,26 +1,45 @@
-"use client"
+"use client";
 
-import * as React from "react"
-
-import { cn } from "@/lib/utils"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { Github, LoaderCircle } from "lucide-react"
-import { GitHubLogoIcon } from "@radix-ui/react-icons"
+import * as React from "react";
+import { auth } from "@/utils/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { LoaderCircle } from "lucide-react";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { useRouter } from "next/navigation";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [email, setEmail] = React.useState<string>("");
+  const [password, setPassword] = React.useState<string>("");
+  const [error, setError] = React.useState<string>("");
+
+  const router = useRouter();
 
   async function onSubmit(event: React.SyntheticEvent) {
-    event.preventDefault()
-    setIsLoading(true)
+    event.preventDefault();
+    setIsLoading(true);
+    setError(""); // Clear any previous error
 
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 3000)
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log("User signed in: ", userCredential.user);
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Error signing in: ", error);
+      setError("Invalid email or password. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -39,13 +58,30 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               autoComplete="email"
               autoCorrect="off"
               disabled={isLoading}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
+            <div className="h-1"></div>
+            <Input
+              id="password"
+              placeholder="*********"
+              type="password"
+              autoCapitalize="none"
+              autoComplete="password"
+              autoCorrect="off"
+              disabled={isLoading}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <div className="h-1"></div>
           </div>
+          {error && <p className="text-red-500 text-xs mb-1">{error}</p>}
+          
           <Button disabled={isLoading}>
             {isLoading && (
               <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
             )}
-            Sign In with Email
+            Sign in with Email
           </Button>
         </div>
       </form>
@@ -68,5 +104,5 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         GitHub
       </Button>
     </div>
-  )
+  );
 }
