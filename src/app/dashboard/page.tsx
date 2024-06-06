@@ -41,7 +41,7 @@ export const dashboardItems = [
 
 const Dashboard = () => {
   const router = useRouter
-  ();
+    ();
   const [isUserValid, setIsUserValid] = useState(false);
 
   useEffect(() => {
