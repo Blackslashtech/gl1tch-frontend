@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import { BentoGrid, BentoGridItem } from "../../components/ui/bento-grid";
 import {
@@ -40,6 +41,10 @@ const ManageGroups = () => {
     const [joinCode, setJoinCode] = useState("");
 
     const handleCreateGroup = () => {
+        if (!groupName || !groupDescription) {
+            alert("Please fill in all fields");
+            return;
+        }
         console.log("Create group button clicked");
         const newGroup = {
             id: groups.length + 1,
@@ -54,6 +59,10 @@ const ManageGroups = () => {
     };
 
     const handleJoinGroup = () => {
+        if (!joinCode) {
+            alert("Please enter a join code");
+            return;
+        }
         console.log("Join group button clicked with code:", joinCode);
         // Add logic to join group using the join code
         setJoinCode("");
@@ -125,13 +134,13 @@ const ManageGroups = () => {
                                 value={groupName}
                                 onChange={(e) => setGroupName(e.target.value)}
                                 placeholder="Group Name"
-                                className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+                                className="w-full p-2 mb-4 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                             />
                             <textarea
                                 value={groupDescription}
                                 onChange={(e) => setGroupDescription(e.target.value)}
                                 placeholder="Group Description"
-                                className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+                                className="w-full p-2 mb-4 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                                 rows={3}
                             />
                             <button
@@ -170,7 +179,7 @@ const ManageGroups = () => {
                                 value={joinCode}
                                 onChange={(e) => setJoinCode(e.target.value)}
                                 placeholder="Join Code"
-                                className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+                                className="w-full p-2 mb-4 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                             />
                             <button
                                 className="px-4 py-2 bg-blue-500 text-white rounded-md w-full"
