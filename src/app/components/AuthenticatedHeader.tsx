@@ -14,7 +14,7 @@ const AuthenticatedHeader = ({ handleLogout }: { handleLogout: () => void }) => 
     { name: "Events", icon: <IconCalendarEvent />, href: "/events" },
     { name: "Live Event", icon: <IconSword />, href: "/live-event" },
     { name: "Manage Groups", icon: <IconUsers />, href: "/manage-groups" },
-    { name: "Analytics", icon: <IconChartBar />, href: "/analytics" },
+    { name: "Stats", icon: <IconChartBar />, href: "/stats" },
     { name: "Profile", icon: <IconSettings />, href: "/profile" },
   ];
 
