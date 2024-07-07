@@ -5,10 +5,15 @@ import Header from "../components/Header";
 import { motion, AnimatePresence } from "framer-motion";
 import { IconPlus, IconUsers, IconUserCheck, IconUserX, IconCopy, IconCheck } from "@tabler/icons-react";
 
+// Function to generate a unique 16-character string
+const generateUniqueCode = () => {
+    return Array(16).fill(0).map(() => Math.random().toString(36).charAt(2)).join('').toUpperCase();
+};
+
 const dummyGroups = [
-    { id: 1, name: "Cyber Team Alpha", members: 10, description: "A team of elite cybersecurity professionals.", joinCode: "ALPHA123" },
-    { id: 2, name: "Hack Masters", members: 15, description: "A group of skilled hackers.", joinCode: "HACK456" },
-    { id: 3, name: "Security Pros", members: 8, description: "Professional security experts.", joinCode: "SECPRO789" },
+    { id: 1, name: "Cyber Team Alpha", members: 10, description: "A team of elite cybersecurity professionals.", joinCode: generateUniqueCode() },
+    { id: 2, name: "Hack Masters", members: 15, description: "A group of skilled hackers.", joinCode: generateUniqueCode() },
+    { id: 3, name: "Security Pros", members: 8, description: "Professional security experts.", joinCode: generateUniqueCode() },
 ];
 
 const ManageGroups = () => {
@@ -36,7 +41,7 @@ const ManageGroups = () => {
             ...newGroup,
             id: newId,
             members: 1,
-            joinCode: `GROUP${newId}`
+            joinCode: generateUniqueCode()
         };
         setGroups([...groups, createdGroup]);
         setNewGroup({ name: "", description: "" });
@@ -55,7 +60,7 @@ const ManageGroups = () => {
     };
 
     const handleLeaveGroup = (groupId) => {
-        setGroups(groups.map(g => g.id === groupId ? { ...g, members: g.members - 1 } : g).filter(g => g.members > 0));
+        setGroups(groups.filter(g => g.id !== groupId));
     };
 
     const copyToClipboard = (code) => {
@@ -162,13 +167,13 @@ const ManageGroups = () => {
                     <input
                         type="text"
                         value={newGroup.name}
-                        onChange={(e) => setNewGroup({ ...newGroup, name: e.target.value })}
+                        onChange={(e) => setNewGroup(prev => ({ ...prev, name: e.target.value }))}
                         placeholder="Group Name"
                         className="w-full p-2 mb-4 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     />
                     <textarea
                         value={newGroup.description}
-                        onChange={(e) => setNewGroup({ ...newGroup, description: e.target.value })}
+                        onChange={(e) => setNewGroup(prev => ({ ...prev, description: e.target.value }))}
                         placeholder="Group Description"
                         className="w-full p-2 mb-4 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         rows={3}

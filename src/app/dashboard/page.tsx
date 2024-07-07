@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { HoverEffect } from "../../components/ui/card-hover-effect";
-import Header from "../components/header";
+import Header from "../components/Header";
 import { SparklesCore } from "@/components/ui/sparkles";
 import { useRouter } from "next/navigation";
 import { auth } from "@/utils/firebase";
