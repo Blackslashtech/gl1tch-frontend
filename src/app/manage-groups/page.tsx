@@ -1,206 +1,206 @@
 "use client";
 
-import React, { useState } from "react";
-import { BentoGrid, BentoGridItem } from "../../components/ui/bento-grid";
-import {
-    IconPlus,
-    IconUsers,
-    IconUserCheck,
-    IconUserX,
-} from "@tabler/icons-react";
-import { Dialog } from "@headlessui/react";
-import Header from "../components/Header"; // Ensure the correct path to Header
+import React, { useState, useEffect } from "react";
+import Header from "../components/Header";
+import { motion, AnimatePresence } from "framer-motion";
+import { IconPlus, IconUsers, IconUserCheck, IconUserX, IconCopy, IconCheck } from "@tabler/icons-react";
 
 const dummyGroups = [
-    {
-        id: 1,
-        name: "Cyber Team Alpha",
-        members: 10,
-        description: "A team of elite cybersecurity professionals.",
-    },
-    {
-        id: 2,
-        name: "Hack Masters",
-        members: 15,
-        description: "A group of skilled hackers.",
-    },
-    {
-        id: 3,
-        name: "Security Pros",
-        members: 8,
-        description: "Professional security experts.",
-    },
+    { id: 1, name: "Cyber Team Alpha", members: 10, description: "A team of elite cybersecurity professionals.", joinCode: "ALPHA123" },
+    { id: 2, name: "Hack Masters", members: 15, description: "A group of skilled hackers.", joinCode: "HACK456" },
+    { id: 3, name: "Security Pros", members: 8, description: "Professional security experts.", joinCode: "SECPRO789" },
 ];
 
 const ManageGroups = () => {
     const [groups, setGroups] = useState(dummyGroups);
     const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
     const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
-    const [groupName, setGroupName] = useState("");
-    const [groupDescription, setGroupDescription] = useState("");
+    const [newGroup, setNewGroup] = useState({ name: "", description: "" });
     const [joinCode, setJoinCode] = useState("");
+    const [copiedCode, setCopiedCode] = useState(null);
+
+    useEffect(() => {
+        if (copiedCode) {
+            const timer = setTimeout(() => setCopiedCode(null), 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [copiedCode]);
 
     const handleCreateGroup = () => {
-        if (!groupName || !groupDescription) {
+        if (!newGroup.name || !newGroup.description) {
             alert("Please fill in all fields");
             return;
         }
-        console.log("Create group button clicked");
-        const newGroup = {
-            id: groups.length + 1,
-            name: groupName,
+        const newId = Math.max(...groups.map(g => g.id)) + 1;
+        const createdGroup = {
+            ...newGroup,
+            id: newId,
             members: 1,
-            description: groupDescription,
+            joinCode: `GROUP${newId}`
         };
-        setGroups([...groups, newGroup]);
-        setGroupName("");
-        setGroupDescription("");
+        setGroups([...groups, createdGroup]);
+        setNewGroup({ name: "", description: "" });
         setIsCreateDialogOpen(false);
     };
 
     const handleJoinGroup = () => {
-        if (!joinCode) {
-            alert("Please enter a join code");
-            return;
+        const group = groups.find(g => g.joinCode === joinCode);
+        if (group) {
+            setGroups(groups.map(g => g.id === group.id ? { ...g, members: g.members + 1 } : g));
+            setJoinCode("");
+            setIsJoinDialogOpen(false);
+        } else {
+            alert("Invalid join code");
         }
-        console.log("Join group button clicked with code:", joinCode);
-        // Add logic to join group using the join code
-        setJoinCode("");
-        setIsJoinDialogOpen(false);
     };
 
-    const handleLeaveGroup = (groupId: number) => {
-        console.log("Leave group button clicked for group:", groupId);
-        setGroups(groups.filter((group) => group.id !== groupId));
+    const handleLeaveGroup = (groupId) => {
+        setGroups(groups.map(g => g.id === groupId ? { ...g, members: g.members - 1 } : g).filter(g => g.members > 0));
     };
+
+    const copyToClipboard = (code) => {
+        navigator.clipboard.writeText(code);
+        setCopiedCode(code);
+    };
+
+    const Modal = ({ isOpen, onClose, title, children }) => (
+        <AnimatePresence>
+            {isOpen && (
+                <motion.div 
+                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                >
+                    <motion.div 
+                        className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md"
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.9, opacity: 0 }}
+                    >
+                        <h2 className="text-2xl font-bold mb-4 dark:text-white">{title}</h2>
+                        {children}
+                        <button 
+                            className="mt-4 px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white rounded-md hover:bg-gray-300 dark:hover:bg-gray-500 transition"
+                            onClick={onClose}
+                        >
+                            Cancel
+                        </button>
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    );
 
     return (
-        <div className="container mx-auto p-4 dark:bg-background">
+        <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
             <Header />
-            <div className="flex justify-between items-center mb-4">
-                <h1 className="text-3xl font-bold dark:text-foreground">Manage Groups</h1>
-                <div className="flex space-x-2">
-                    <button
-                        onClick={() => setIsCreateDialogOpen(true)}
-                        className="px-4 py-2 bg-blue-500 text-white rounded-md"
+            <div className="container mx-auto px-4 py-8 pt-24">
+                <div className="flex justify-between items-center mb-8">
+                    <h1 className="text-4xl font-bold text-gray-800 dark:text-white">Manage Groups</h1>
+                    <div className="space-x-4">
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="px-6 py-3 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition duration-300"
+                            onClick={() => setIsCreateDialogOpen(true)}
+                        >
+                            <IconPlus className="inline-block mr-2" />
+                            Create Group
+                        </motion.button>
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="px-6 py-3 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600 transition duration-300"
+                            onClick={() => setIsJoinDialogOpen(true)}
+                        >
+                            <IconUserCheck className="inline-block mr-2" />
+                            Join Group
+                        </motion.button>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {groups.map((group) => (
+                        <motion.div
+                            key={group.id}
+                            className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6"
+                            whileHover={{ scale: 1.02 }}
+                            transition={{ type: "spring", stiffness: 300 }}
+                        >
+                            <h2 className="text-2xl font-bold mb-2 dark:text-white">{group.name}</h2>
+                            <p className="text-gray-600 dark:text-gray-300 mb-4">{group.description}</p>
+                            <p className="text-gray-600 dark:text-gray-300 mb-4">Members: {group.members}</p>
+                            <div className="flex justify-between items-center">
+                                <div className="relative">
+                                    <button
+                                        className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+                                        onClick={() => copyToClipboard(group.joinCode)}
+                                    >
+                                        {copiedCode === group.joinCode ? <IconCheck className="inline-block mr-1" /> : <IconCopy className="inline-block mr-1" />}
+                                        {group.joinCode}
+                                    </button>
+                                    {copiedCode === group.joinCode && (
+                                        <span className="absolute top-full left-0 mt-2 text-sm text-green-500">Copied!</span>
+                                    )}
+                                </div>
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300"
+                                    onClick={() => handleLeaveGroup(group.id)}
+                                >
+                                    <IconUserX className="inline-block mr-1" />
+                                    Leave
+                                </motion.button>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
+
+                <Modal isOpen={isCreateDialogOpen} onClose={() => setIsCreateDialogOpen(false)} title="Create Group">
+                    <input
+                        type="text"
+                        value={newGroup.name}
+                        onChange={(e) => setNewGroup({ ...newGroup, name: e.target.value })}
+                        placeholder="Group Name"
+                        className="w-full p-2 mb-4 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    />
+                    <textarea
+                        value={newGroup.description}
+                        onChange={(e) => setNewGroup({ ...newGroup, description: e.target.value })}
+                        placeholder="Group Description"
+                        className="w-full p-2 mb-4 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        rows={3}
+                    />
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
+                        onClick={handleCreateGroup}
                     >
                         Create Group
-                    </button>
-                    <button
-                        onClick={() => setIsJoinDialogOpen(true)}
-                        className="px-4 py-2 bg-green-500 text-white rounded-md"
+                    </motion.button>
+                </Modal>
+
+                <Modal isOpen={isJoinDialogOpen} onClose={() => setIsJoinDialogOpen(false)} title="Join Group">
+                    <input
+                        type="text"
+                        value={joinCode}
+                        onChange={(e) => setJoinCode(e.target.value)}
+                        placeholder="Enter Join Code"
+                        className="w-full p-2 mb-4 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    />
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-300"
+                        onClick={handleJoinGroup}
                     >
                         Join Group
-                    </button>
-                </div>
+                    </motion.button>
+                </Modal>
             </div>
-            <BentoGrid className="max-w-7xl mx-auto">
-                {groups.map((group) => (
-                    <BentoGridItem
-                        key={group.id}
-                        title={group.name}
-                        description={
-                            <>
-                                <p>Members: {group.members}</p>
-                                <p>{group.description}</p>
-                            </>
-                        }
-                        header={
-                            <button
-                                onClick={() => handleLeaveGroup(group.id)}
-                                className="px-4 py-2 bg-red-500 text-white rounded-md"
-                            >
-                                <IconUserX className="inline-block mr-1" />
-                                Leave Group
-                            </button>
-                        }
-                        icon={<IconUsers className="h-8 w-8 text-neutral-500" />}
-                    />
-                ))}
-            </BentoGrid>
-
-            <Dialog open={isCreateDialogOpen} onClose={() => setIsCreateDialogOpen(false)} className="fixed z-10 inset-0 overflow-y-auto">
-                <div className="flex items-center justify-center min-h-screen px-4">
-                    <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
-                    <div className="bg-white dark:bg-background rounded-lg overflow-hidden shadow-xl transform transition-all max-w-lg w-full p-6">
-                        <Dialog.Title className="text-lg font-medium text-gray-900 dark:text-foreground">Create Group</Dialog.Title>
-                        <Dialog.Description className="mt-2 text-sm text-gray-500 dark:text-foreground">
-                            Enter the details for the new group.
-                        </Dialog.Description>
-
-                        <div className="mt-4">
-                            <input
-                                type="text"
-                                value={groupName}
-                                onChange={(e) => setGroupName(e.target.value)}
-                                placeholder="Group Name"
-                                className="w-full p-2 mb-4 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                            />
-                            <textarea
-                                value={groupDescription}
-                                onChange={(e) => setGroupDescription(e.target.value)}
-                                placeholder="Group Description"
-                                className="w-full p-2 mb-4 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                                rows={3}
-                            />
-                            <button
-                                className="px-4 py-2 bg-green-500 text-white rounded-md w-full"
-                                onClick={handleCreateGroup}
-                            >
-                                <IconPlus className="inline-block mr-1" />
-                                Create Group
-                            </button>
-                        </div>
-
-                        <div className="mt-4 flex justify-end">
-                            <button
-                                className="px-4 py-2 bg-gray-500 text-white rounded-md"
-                                onClick={() => setIsCreateDialogOpen(false)}
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </Dialog>
-
-            <Dialog open={isJoinDialogOpen} onClose={() => setIsJoinDialogOpen(false)} className="fixed z-10 inset-0 overflow-y-auto">
-                <div className="flex items-center justify-center min-h-screen px-4">
-                    <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
-                    <div className="bg-white dark:bg-background rounded-lg overflow-hidden shadow-xl transform transition-all max-w-lg w-full p-6">
-                        <Dialog.Title className="text-lg font-medium text-gray-900 dark:text-foreground">Join Group</Dialog.Title>
-                        <Dialog.Description className="mt-2 text-sm text-gray-500 dark:text-foreground">
-                            Enter the join code for the group you want to join.
-                        </Dialog.Description>
-
-                        <div className="mt-4">
-                            <input
-                                type="text"
-                                value={joinCode}
-                                onChange={(e) => setJoinCode(e.target.value)}
-                                placeholder="Join Code"
-                                className="w-full p-2 mb-4 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                            />
-                            <button
-                                className="px-4 py-2 bg-blue-500 text-white rounded-md w-full"
-                                onClick={handleJoinGroup}
-                            >
-                                <IconUserCheck className="inline-block mr-1" />
-                                Join Group
-                            </button>
-                        </div>
-
-                        <div className="mt-4 flex justify-end">
-                            <button
-                                className="px-4 py-2 bg-gray-500 text-white rounded-md"
-                                onClick={() => setIsJoinDialogOpen(false)}
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </Dialog>
         </div>
     );
 };

@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import Header from "../components/Header";
+import { motion } from "framer-motion";
+import { FiUser, FiCreditCard, FiPackage, FiClock } from "react-icons/fi";
 
 const ManageProfile = () => {
     const [profile, setProfile] = useState({
@@ -18,7 +20,7 @@ const ManageProfile = () => {
         teamServiceHours: 10,
     });
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e) => {
         const { name, value } = e.target;
         setProfile((prevProfile) => ({
             ...prevProfile,
@@ -26,7 +28,7 @@ const ManageProfile = () => {
         }));
     };
 
-    const handleBillingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleBillingChange = (e) => {
         const { name, value } = e.target;
         setBillingInfo((prevBillingInfo) => ({
             ...prevBillingInfo,
@@ -34,7 +36,7 @@ const ManageProfile = () => {
         }));
     };
 
-    const handlePlanChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const handlePlanChange = (e) => {
         setPlan(e.target.value);
     };
 
@@ -46,112 +48,93 @@ const ManageProfile = () => {
         console.log("Billing info saved:", billingInfo);
     };
 
+    const CardWrapper = ({ icon, title, children }) => (
+        <motion.div
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6"
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 300 }}
+        >
+            <div className="flex items-center mb-4">
+                {icon}
+                <h2 className="text-2xl font-bold ml-2 dark:text-white">{title}</h2>
+            </div>
+            {children}
+        </motion.div>
+    );
+
+    const Input = ({ label, ...props }) => (
+        <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{label}</label>
+            <input
+                {...props}
+                className="w-full px-3 py-2 text-gray-700 dark:text-white bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+        </div>
+    );
+
+    const Button = ({ children, ...props }) => (
+        <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-md shadow-md hover:shadow-lg transition duration-300"
+            {...props}
+        >
+            {children}
+        </motion.button>
+    );
+
     return (
-        <div className="container mx-auto p-4 dark:bg-background">
+        <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
             <Header />
-            <h1 className="text-3xl font-bold mb-4 dark:text-foreground">Manage Profile</h1>
+            <div className="container mx-auto px-4 py-8 pt-24">
+                <h1 className="text-4xl font-bold mb-8 text-center text-gray-800 dark:text-white">Manage Your Profile</h1>
 
-            <div className="bg-white dark:bg-background rounded-lg shadow-md p-6 mb-6">
-                <h2 className="text-2xl font-bold mb-4 dark:text-foreground">Profile Information</h2>
-                <div className="mb-4">
-                    <label className="block text-sm font-medium dark:text-foreground">Display Name</label>
-                    <input
-                        type="text"
-                        name="displayName"
-                        value={profile.displayName}
-                        onChange={handleInputChange}
-                        className="mt-1 p-2 block w-full dark:bg-input dark:text-foreground rounded-md border border-gray-300"
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-sm font-medium dark:text-foreground">Email</label>
-                    <input
-                        type="email"
-                        name="email"
-                        value={profile.email}
-                        onChange={handleInputChange}
-                        className="mt-1 p-2 block w-full dark:bg-input dark:text-foreground rounded-md border border-gray-300"
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-sm font-medium dark:text-foreground">Country</label>
-                    <input
-                        type="text"
-                        name="country"
-                        value={profile.country}
-                        onChange={handleInputChange}
-                        className="mt-1 p-2 block w-full dark:bg-input dark:text-foreground rounded-md border border-gray-300"
-                    />
-                </div>
-                <button
-                    onClick={handleSaveProfile}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-md"
-                >
-                    Save Profile
-                </button>
-            </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <CardWrapper icon={<FiUser className="w-6 h-6 text-blue-500" />} title="Profile Information">
+                        <Input label="Display Name" name="displayName" value={profile.displayName} onChange={handleInputChange} />
+                        <Input label="Email" type="email" name="email" value={profile.email} onChange={handleInputChange} />
+                        <Input label="Country" name="country" value={profile.country} onChange={handleInputChange} />
+                        <Button onClick={handleSaveProfile}>Save Profile</Button>
+                    </CardWrapper>
 
-            <div className="bg-white dark:bg-background rounded-lg shadow-md p-6 mb-6">
-                <h2 className="text-2xl font-bold mb-4 dark:text-foreground">Billing Information</h2>
-                <div className="mb-4">
-                    <label className="block text-sm font-medium dark:text-foreground">Card Number</label>
-                    <input
-                        type="text"
-                        name="cardNumber"
-                        value={billingInfo.cardNumber}
-                        onChange={handleBillingChange}
-                        className="mt-1 p-2 block w-full dark:bg-input dark:text-foreground rounded-md border border-gray-300"
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-sm font-medium dark:text-foreground">Expiry Date</label>
-                    <input
-                        type="text"
-                        name="expiryDate"
-                        value={billingInfo.expiryDate}
-                        onChange={handleBillingChange}
-                        className="mt-1 p-2 block w-full dark:bg-input dark:text-foreground rounded-md border border-gray-300"
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-sm font-medium dark:text-foreground">CVV</label>
-                    <input
-                        type="text"
-                        name="cvv"
-                        value={billingInfo.cvv}
-                        onChange={handleBillingChange}
-                        className="mt-1 p-2 block w-full dark:bg-input dark:text-foreground rounded-md border border-gray-300"
-                    />
-                </div>
-                <button
-                    onClick={handleSaveBilling}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-md"
-                >
-                    Save Billing Info
-                </button>
-            </div>
+                    <CardWrapper icon={<FiCreditCard className="w-6 h-6 text-green-500" />} title="Billing Information">
+                        <Input label="Card Number" name="cardNumber" value={billingInfo.cardNumber} onChange={handleBillingChange} />
+                        <Input label="Expiry Date" name="expiryDate" value={billingInfo.expiryDate} onChange={handleBillingChange} />
+                        <Input label="CVV" name="cvv" value={billingInfo.cvv} onChange={handleBillingChange} />
+                        <Button onClick={handleSaveBilling}>Save Billing Info</Button>
+                    </CardWrapper>
 
-            <div className="bg-white dark:bg-background rounded-lg shadow-md p-6 mb-6">
-                <h2 className="text-2xl font-bold mb-4 dark:text-foreground">Subscription Plan</h2>
-                <div className="mb-4">
-                    <label className="block text-sm font-medium dark:text-foreground">Select Plan</label>
-                    <select
-                        value={plan}
-                        onChange={handlePlanChange}
-                        className="mt-1 p-2 block w-full dark:bg-input dark:text-foreground rounded-md border border-gray-300"
-                    >
-                        <option value="Pay as you go">Pay as you go</option>
-                        <option value="Basic">Basic</option>
-                        <option value="Premium">Premium</option>
-                    </select>
-                </div>
-            </div>
+                    <CardWrapper icon={<FiPackage className="w-6 h-6 text-purple-500" />} title="Subscription Plan">
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Select Plan</label>
+                            <select
+                                value={plan}
+                                onChange={handlePlanChange}
+                                className="w-full px-3 py-2 text-gray-700 dark:text-white bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                <option value="Pay as you go">Pay as you go ($0.50 per team-service-hour)</option>
+                                <option value="Basic">Basic (30 team-service-hours, $10/month)</option>
+                                <option value="Premium">Premium (80 team-service-hours, $20/month)</option>
+                            </select>
+                        </div>
+                        <Button>Update Plan</Button>
+                    </CardWrapper>
 
-            <div className="bg-white dark:bg-background rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-bold mb-4 dark:text-foreground">Usage</h2>
-                <div className="mb-4">
-                    <p className="text-sm font-medium dark:text-foreground">Team Service Hours Used</p>
-                    <p className="text-lg dark:text-foreground">{usage.teamServiceHours}</p>
+                    <CardWrapper icon={<FiClock className="w-6 h-6 text-yellow-500" />} title="Usage Statistics">
+                        <div className="mb-4">
+                            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Team Service Hours Used</p>
+                            <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{usage.teamServiceHours}</p>
+                        </div>
+                        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                            <div 
+                                className="h-full bg-blue-500" 
+                                style={{ width: `${(usage.teamServiceHours / 30) * 100}%` }}
+                            ></div>
+                        </div>
+                        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                            {30 - usage.teamServiceHours} hours remaining this month
+                        </p>
+                    </CardWrapper>
                 </div>
             </div>
         </div>
