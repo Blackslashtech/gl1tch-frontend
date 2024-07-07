@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { World } from "@/components/ui/globe";
 import { Binary, Boxes, Terminal } from "lucide-react";
 import type { NextPage } from "next";
 
@@ -105,7 +104,6 @@ const Home: NextPage = () => {
       </section>
       <div className="h-12"></div>
       <div className="w-full absolute inset-0 h-screen -z-10">
-        <World data={sampleArcs} globeConfig={globeConfig} />
       </div>
     </div>
   );

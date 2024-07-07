@@ -69,7 +69,7 @@ const Dashboard = () => {
       auth.onAuthStateChanged((user) => {
         if (user) {
           setIsUserValid(true);
-          setUserName(user.displayName || user.email);
+          setUserName(user.displayName ?? user.email ?? "");
           // Fetch user stats from your backend here
           fetchUserStats(user.uid);
         } else {
@@ -82,7 +82,7 @@ const Dashboard = () => {
     checkAuth();
   }, [router]);
 
-  const fetchUserStats = async (userId) => {
+  const fetchUserStats = async (userId: any) => {
     // This is a placeholder. Replace with actual API call to your backend
     // const response = await fetch(`/api/user-stats/${userId}`);
     // const data = await response.json();
