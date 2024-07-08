@@ -84,35 +84,63 @@ const Events = () => {
 
             {isCreateDialogOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-gray-800 rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
-                        <div className="sticky top-0 bg-gray-800 p-6 border-b border-gray-700">
-                            <h2 className="text-2xl font-bold">Create New Event</h2>
+                    <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+                        <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-purple-600 p-6 rounded-t-lg">
+                            <h2 className="text-3xl font-bold text-white">Create New Event</h2>
+                            <p className="text-gray-200 mt-2">Fill in the details to create your awesome event!</p>
                         </div>
-                        <form onSubmit={(e) => { e.preventDefault(); handleCreateEvent(); }} className="p-6 space-y-4">
+                        <form onSubmit={(e) => { e.preventDefault(); handleCreateEvent(); }} className="p-6 space-y-6">
                             {Object.entries(newEvent).map(([key, value]) => (
-                                <div key={key}>
-                                    <label className="block text-sm font-medium text-gray-300">{key.charAt(0).toUpperCase() + key.slice(1)}</label>
+                                <div key={key} className="transition-all duration-300 hover:scale-[1.02]">
+                                    <label className="block text-sm font-medium text-gray-300 mb-1">{key.charAt(0).toUpperCase() + key.slice(1)}</label>
                                     {key === 'description' || key === 'additionalInfo' ? (
-                                        <textarea value={value} onChange={(e) => setNewEvent({ ...newEvent, [key]: e.target.value })} className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white" rows="3" required={key === 'description'} />
+                                        <textarea
+                                            value={value}
+                                            onChange={(e) => setNewEvent({ ...newEvent, [key]: e.target.value })}
+                                            className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                                            rows="3"
+                                            required={key === 'description'}
+                                        />
                                     ) : key === 'eventType' ? (
-                                        <select value={value} onChange={(e) => setNewEvent({ ...newEvent, [key]: e.target.value })} className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white" required>
+                                        <select
+                                            value={value}
+                                            onChange={(e) => setNewEvent({ ...newEvent, [key]: e.target.value })}
+                                            className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                                            required
+                                        >
                                             <option value="Individual">Individual</option>
                                             <option value="Team">Team</option>
                                         </select>
                                     ) : (
-                                        <input type={key === 'date' ? 'date' : key === 'capacity' ? 'number' : key === 'eventLink' ? 'url' : 'text'} value={value} onChange={(e) => setNewEvent({ ...newEvent, [key]: e.target.value })} className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white" required={['title', 'date', 'description', 'category', 'hostedBy', 'capacity', 'eventCode'].includes(key)} />
+                                        <input
+                                            type={key === 'date' ? 'date' : key === 'capacity' ? 'number' : key === 'eventLink' ? 'url' : 'text'}
+                                            value={value}
+                                            onChange={(e) => setNewEvent({ ...newEvent, [key]: e.target.value })}
+                                            className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                                            required={['title', 'date', 'description', 'category', 'hostedBy', 'capacity', 'eventCode'].includes(key)}
+                                        />
                                     )}
                                 </div>
                             ))}
-                            <div className="flex justify-end space-x-3 mt-6">
-                                <button type="button" className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition duration-300" onClick={() => setIsCreateDialogOpen(false)}>Cancel</button>
-                                <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300">Create Event</button>
+                            <div className="flex justify-end space-x-3 mt-8">
+                                <button
+                                    type="button"
+                                    className="px-6 py-3 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition duration-300 transform hover:scale-105"
+                                    onClick={() => setIsCreateDialogOpen(false)}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-md hover:from-blue-600 hover:to-purple-700 transition duration-300 transform hover:scale-105 shadow-lg"
+                                >
+                                    Create Event
+                                </button>
                             </div>
                         </form>
                     </div>
                 </div>
             )}
-
             {isDetailsDialogOpen && selectedEvent && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-gray-800 p-6 rounded-lg max-w-2xl w-full">
