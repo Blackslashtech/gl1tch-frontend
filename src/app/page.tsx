@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Binary, Boxes, Terminal, ChevronRight } from "lucide-react";
@@ -7,8 +7,18 @@ import type { NextPage } from "next";
 import { motion } from "framer-motion";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import { SparklesCore } from "@/components/ui/sparkles";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { db } from "@/utils/firebase"; // Make sure this path is correct
+import { collection, addDoc } from "firebase/firestore";
 
 const Home: NextPage = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const formRef = useRef<HTMLDivElement>(null);
+
   const features = [
     { icon: Binary, title: "Train", content: "Access over 100 attack/defense services." },
     { icon: Terminal, title: "Test", content: "Configurable APIs and scalable environments." },
@@ -34,28 +44,42 @@ const Home: NextPage = () => {
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      await addDoc(collection(db, "betaSignups"), {
+        name,
+        email,
+        company,
+        timestamp: new Date()
+      });
+
+      // Reset form fields
+      setName("");
+      setEmail("");
+      setCompany("");
+
+      alert("Thank you for signing up for the beta!");
+    } catch (error) {
+      console.error("Error submitting form: ", error);
+      alert("There was an error submitting your form. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const scrollToForm = () => {
+    formRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white overflow-hidden">
       <BackgroundBeams />
       <div className="relative z-10">
         <header className="py-6">
-          <nav className="container mx-auto flex justify-between items-center">
-            <motion.h1 
-              className="font-audiowide text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              GL1TCH
-            </motion.h1>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-            >
-              <Button variant="ghost" className="mr-4">Login</Button>
-              <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700">Sign Up</Button>
-            </motion.div>
-          </nav>
+          
         </header>
 
         <main className="container mx-auto px-4 py-20">
@@ -78,8 +102,8 @@ const Home: NextPage = () => {
               Deploy, train, test, and compete in a unified cyber environment supporting multiple frameworks.
             </motion.p>
             <motion.div variants={itemVariants}>
-              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all duration-300">
-                Get Started <ChevronRight className="ml-2" />
+              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all duration-300" onClick={scrollToForm}>
+                Sign Up for Beta <ChevronRight className="ml-2" />
               </Button>
             </motion.div>
           </motion.div>
@@ -105,6 +129,64 @@ const Home: NextPage = () => {
             ))}
           </motion.div>
         </main>
+
+        <section className="container mx-auto px-4 py-20" ref={formRef}>
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+            className="max-w-md mx-auto"
+          >
+            <Card className="bg-gray-800 border-gray-700">
+              <CardHeader>
+                <h3 className="text-2xl font-bold text-center text-white">Sign Up for Beta</h3>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <Label htmlFor="name">Name</Label>
+                    <Input
+                      id="name"
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                      className="bg-gray-700 border-gray-600 text-white"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="bg-gray-700 border-gray-600 text-white"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="company">Entity/Company (Optional)</Label>
+                    <Input
+                      id="company"
+                      type="text"
+                      value={company}
+                      onChange={(e) => setCompany(e.target.value)}
+                      className="bg-gray-700 border-gray-600 text-white"
+                    />
+                  </div>
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Submitting..." : "Sign Up for Beta"}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </section>
 
         <footer className="container mx-auto py-8 text-center text-gray-400">
           <p>&copy; 2024 GL1TCH RANGE. All rights reserved.</p>

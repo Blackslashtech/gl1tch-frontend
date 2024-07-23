@@ -1,34 +1,38 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { auth } from "@/utils/firebase"; // Adjust the path as necessary
-import { onAuthStateChanged, signOut, User } from "firebase/auth";
-import AuthenticatedHeader from "../components/AuthenticatedHeader";
-import UnauthenticatedHeader from "../components/UnauthenticatedHeader";
+import { useRef } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const Header = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const formRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.error("Error signing out: ", error);
-    }
+  const scrollToForm = () => {
+    formRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <>
-      {user ? <AuthenticatedHeader handleLogout={handleLogout} /> : <UnauthenticatedHeader />}
-    </>
+    <header className="bg-gray-900 py-6 fixed top-0 w-full border-b border-gray-800 backdrop-blur-xl z-50">
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-6">
+        <Link href="/">
+          <h1 className="font-audiowide text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 text-3xl">GL1TCH</h1>
+        </Link>
+        <nav>
+          <ul className="flex space-x-6 items-center">
+          <li>
+              <Link href="/">
+                <Button variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-800">Home</Button>
+              </Link>
+            </li>
+            <li>
+              <Link href="/about">
+                <Button variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-800">About</Button>
+              </Link>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
   );
 };
 
