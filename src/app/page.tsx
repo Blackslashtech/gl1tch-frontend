@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Binary, Boxes, Terminal, ChevronRight } from "lucide-react";
@@ -9,8 +9,9 @@ import { BackgroundBeams } from "@/components/ui/background-beams";
 import { SparklesCore } from "@/components/ui/sparkles";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { db } from "@/utils/firebase"; // Make sure this path is correct
+import { db, analytics } from "@/utils/firebase";
 import { collection, addDoc } from "firebase/firestore";
+import { logEvent, setUserProperties, Analytics } from "firebase/analytics";
 
 const Home: NextPage = () => {
   const [name, setName] = useState("");
@@ -18,6 +19,17 @@ const Home: NextPage = () => {
   const [company, setCompany] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Log page view
+    if (analytics) {
+      logEvent(analytics, 'page_view', {
+        page_title: 'Home',
+        page_location: window.location.href,
+        page_path: window.location.pathname
+      });
+    }
+  }, []);
 
   const features = [
     { icon: Binary, title: "Train", content: "Access over 100 attack/defense services." },
@@ -49,12 +61,33 @@ const Home: NextPage = () => {
     setIsSubmitting(true);
 
     try {
-      await addDoc(collection(db, "betaSignups"), {
+      const docRef = await addDoc(collection(db, "betaSignups"), {
         name,
         email,
         company,
-        timestamp: new Date()
+        timestamp: new Date(),
+        userAgent: navigator.userAgent,
+        language: navigator.language,
+        platform: navigator.platform,
+        screenResolution: `${window.screen.width}x${window.screen.height}`,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        referrer: document.referrer
       });
+
+      // Log sign up event
+      if (analytics) {
+        logEvent(analytics, 'sign_up', {
+          method: 'Beta Form',
+          user_id: docRef.id
+        });
+
+        // Set user properties
+        setUserProperties(analytics, {
+          user_id: docRef.id,
+          signup_date: new Date().toISOString(),
+          company: company
+        });
+      }
 
       // Reset form fields
       setName("");
@@ -65,6 +98,13 @@ const Home: NextPage = () => {
     } catch (error) {
       console.error("Error submitting form: ", error);
       alert("There was an error submitting your form. Please try again.");
+      
+      // Log error event
+      if (analytics) {
+        logEvent(analytics, 'sign_up_error', {
+          error_message: (error as Error).message
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -72,6 +112,17 @@ const Home: NextPage = () => {
 
   const scrollToForm = () => {
     formRef.current?.scrollIntoView({ behavior: 'smooth' });
+    
+    // Log scroll to form event
+    if (analytics) {
+      logEvent(analytics, 'scroll_to_form');
+    }
+  };
+
+  const logAnalyticsEvent = (eventName: string, eventParams?: Record<string, any>) => {
+    if (analytics) {
+      logEvent(analytics, eventName, eventParams);
+    }
   };
 
   return (
@@ -79,7 +130,7 @@ const Home: NextPage = () => {
       <BackgroundBeams />
       <div className="relative z-10">
         <header className="py-6">
-          
+          {/* Header content */}
         </header>
 
         <main className="container mx-auto px-4 py-20">
@@ -102,7 +153,14 @@ const Home: NextPage = () => {
               Deploy, train, test, and compete in a unified cyber environment supporting multiple frameworks.
             </motion.p>
             <motion.div variants={itemVariants}>
-              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all duration-300" onClick={scrollToForm}>
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all duration-300" 
+                onClick={() => {
+                  scrollToForm();
+                  logAnalyticsEvent('cta_click', { button_text: 'Sign Up for Beta' });
+                }}
+              >
                 Sign Up for Beta <ChevronRight className="ml-2" />
               </Button>
             </motion.div>
@@ -115,7 +173,11 @@ const Home: NextPage = () => {
             variants={containerVariants}
           >
             {features.map((feature, index) => (
-              <motion.div key={feature.title} variants={itemVariants}>
+              <motion.div 
+                key={feature.title} 
+                variants={itemVariants}
+                onViewportEnter={() => logAnalyticsEvent('feature_view', { feature_title: feature.title })}
+              >
                 <Card className="bg-gray-800 border-gray-700 hover:border-blue-500 transition-all duration-300 h-full">
                   <CardHeader className="flex flex-row items-center pb-2">
                     <feature.icon className="h-6 w-6 text-blue-400 mr-2" />
@@ -136,6 +198,7 @@ const Home: NextPage = () => {
             animate="visible"
             variants={containerVariants}
             className="max-w-md mx-auto"
+            onViewportEnter={() => logAnalyticsEvent('form_view')}
           >
             <Card className="bg-gray-800 border-gray-700">
               <CardHeader>
@@ -149,7 +212,10 @@ const Home: NextPage = () => {
                       id="name"
                       type="text"
                       value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      onChange={(e) => {
+                        setName(e.target.value);
+                        logAnalyticsEvent('form_field_interaction', { field_name: 'name' });
+                      }}
                       required
                       className="bg-gray-700 border-gray-600 text-white"
                     />
@@ -160,7 +226,10 @@ const Home: NextPage = () => {
                       id="email"
                       type="email"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        logAnalyticsEvent('form_field_interaction', { field_name: 'email' });
+                      }}
                       required
                       className="bg-gray-700 border-gray-600 text-white"
                     />
@@ -171,7 +240,10 @@ const Home: NextPage = () => {
                       id="company"
                       type="text"
                       value={company}
-                      onChange={(e) => setCompany(e.target.value)}
+                      onChange={(e) => {
+                        setCompany(e.target.value);
+                        logAnalyticsEvent('form_field_interaction', { field_name: 'company' });
+                      }}
                       className="bg-gray-700 border-gray-600 text-white"
                     />
                   </div>

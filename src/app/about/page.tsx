@@ -1,14 +1,25 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../components/Header";
 import { motion } from "framer-motion";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import { SparklesCore } from "@/components/ui/sparkles";
 import { Card, CardContent } from "@/components/ui/card";
 import { Laptop, Cloud, Users } from "lucide-react";
+import { analytics } from "@/utils/firebase";
+import { logEvent } from "firebase/analytics";
 
 const AboutPage = () => {
+  useEffect(() => {
+    // Log page view
+    logAnalyticsEvent('page_view', {
+      page_title: 'About',
+      page_location: window.location.href,
+      page_path: window.location.pathname
+    });
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -28,6 +39,12 @@ const AboutPage = () => {
     }
   };
 
+  const logAnalyticsEvent = (eventName: string, eventParams?: Record<string, any>) => {
+    if (analytics) {
+      logEvent(analytics, eventName, eventParams);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white overflow-hidden">
       <BackgroundBeams />
@@ -40,6 +57,7 @@ const AboutPage = () => {
             animate="visible"
             variants={containerVariants}
             className="text-center pt-16"
+            onViewportEnter={() => logAnalyticsEvent('section_view', { section_name: 'hero' })}
           >
             <motion.h1 
               className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600"
@@ -66,6 +84,7 @@ const AboutPage = () => {
             initial="hidden"
             animate="visible"
             className="mb-20"
+            onViewportEnter={() => logAnalyticsEvent('section_view', { section_name: 'deploy_anywhere' })}
           >
             <motion.h2 
               className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600"
@@ -86,6 +105,7 @@ const AboutPage = () => {
             initial="hidden"
             animate="visible"
             className="mb-20"
+            onViewportEnter={() => logAnalyticsEvent('section_view', { section_name: 'our_model' })}
           >
             <motion.h2 
               className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600"
@@ -94,7 +114,10 @@ const AboutPage = () => {
               Our Model
             </motion.h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <motion.div variants={itemVariants}>
+              <motion.div 
+                variants={itemVariants}
+                onViewportEnter={() => logAnalyticsEvent('model_view', { model_type: 'self_hosted' })}
+              >
                 <Card className="bg-gray-800 border-gray-700 hover:border-blue-500 transition-all duration-300 h-full">
                   <CardContent className="p-6">
                     <Laptop className="h-12 w-12 text-blue-400 mb-4" />
@@ -103,7 +126,10 @@ const AboutPage = () => {
                   </CardContent>
                 </Card>
               </motion.div>
-              <motion.div variants={itemVariants}>
+              <motion.div 
+                variants={itemVariants}
+                onViewportEnter={() => logAnalyticsEvent('model_view', { model_type: 'cloud_range' })}
+              >
                 <Card className="bg-gray-800 border-gray-700 hover:border-blue-500 transition-all duration-300 h-full">
                   <CardContent className="p-6">
                     <Cloud className="h-12 w-12 text-purple-400 mb-4" />
@@ -112,7 +138,10 @@ const AboutPage = () => {
                   </CardContent>
                 </Card>
               </motion.div>
-              <motion.div variants={itemVariants}>
+              <motion.div 
+                variants={itemVariants}
+                onViewportEnter={() => logAnalyticsEvent('model_view', { model_type: 'onsite_support' })}
+              >
                 <Card className="bg-gray-800 border-gray-700 hover:border-blue-500 transition-all duration-300 h-full">
                   <CardContent className="p-6">
                     <Users className="h-12 w-12 text-green-400 mb-4" />
