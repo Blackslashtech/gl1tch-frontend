@@ -78,27 +78,7 @@ const AboutPage = () => {
             </motion.p>
           </motion.div>
 
-          <motion.section
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="mb-20"
-            onViewportEnter={() => logAnalyticsEvent('section_view', { section_name: 'deploy_anywhere' })}
-          >
-            <motion.h2 
-              className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600"
-              variants={itemVariants}
-            >
-              Deploy anywhere. In minutes.
-            </motion.h2>
-            <motion.p
-              className="text-lg text-gray-300 max-w-3xl mx-auto mb-10 text-center"
-              variants={itemVariants}
-            >
-              Run a full-blown attack-defense range from your laptop. Or use our cloud hosting to scale it to dozens of teams. If it can run Docker, it can run Glitch Range.
-            </motion.p>
-          </motion.section>
-
+          
           <motion.section
             variants={containerVariants}
             initial="hidden"
@@ -151,10 +131,32 @@ const AboutPage = () => {
               </motion.div>
             </div>
           </motion.section>
+
+          <motion.section
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="mb-20"
+            onViewportEnter={() => logAnalyticsEvent('section_view', { section_name: 'deploy_anywhere' })}
+          >
+            <motion.h2 
+              className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600"
+              variants={itemVariants}
+            >
+              Deploy anywhere. In minutes.
+            </motion.h2>
+            <motion.p
+              className="text-lg text-gray-300 max-w-3xl mx-auto mb-10 text-center"
+              variants={itemVariants}
+            >
+              Run a full-blown attack-defense range from your laptop. Or use our cloud hosting to scale it to dozens of teams. If it can run Docker, it can run Glitch Range.
+            </motion.p>
+          </motion.section>
+
         </main>
 
         <footer className="container mx-auto py-8 text-center text-gray-400">
-          <p>Glitch Range, built by Blackslash Tech</p>
+          <p>Glitch Range, built by Blackslash</p>
         </footer>
       </div>
     </div>
