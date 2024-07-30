@@ -4,7 +4,6 @@ import React, { useEffect } from "react";
 import Header from "../components/Header";
 import { motion } from "framer-motion";
 import { BackgroundBeams } from "@/components/ui/background-beams";
-import { SparklesCore } from "@/components/ui/sparkles";
 import { Card, CardContent } from "@/components/ui/card";
 import { Laptop, Cloud, Users } from "lucide-react";
 import { analytics } from "@/utils/firebase";
@@ -158,16 +157,6 @@ const AboutPage = () => {
           <p>Glitch Range, built by Blackslash Tech</p>
         </footer>
       </div>
-
-      <SparklesCore
-        id="tsparticlesfullpage"
-        background="transparent"
-        minSize={0.6}
-        maxSize={1.4}
-        particleDensity={100}
-        className="w-full h-full fixed inset-0 -z-10"
-        particleColor="#FFFFFF"
-      />
     </div>
   );
 };

@@ -6,7 +6,6 @@ import { Binary, Boxes, Terminal, ChevronRight } from "lucide-react";
 import type { NextPage } from "next";
 import { motion } from "framer-motion";
 import { BackgroundBeams } from "@/components/ui/background-beams";
-import { SparklesCore } from "@/components/ui/sparkles";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { db, analytics } from "@/utils/firebase";
@@ -265,15 +264,6 @@ const Home: NextPage = () => {
         </footer>
       </div>
 
-      <SparklesCore
-        id="tsparticlesfullpage"
-        background="transparent"
-        minSize={0.6}
-        maxSize={1.4}
-        particleDensity={100}
-        className="w-full h-full fixed inset-0 -z-10"
-        particleColor="#FFFFFF"
-      />
     </div>
   );
 };

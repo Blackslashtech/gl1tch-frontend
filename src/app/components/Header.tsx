@@ -29,6 +29,16 @@ const Header = () => {
                 <Button variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-800">About</Button>
               </Link>
             </li>
+            <li>
+              <Link href="/instructions">
+                <Button variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-800">Instructions</Button>
+              </Link>
+            </li>
+            <li>
+              <Link href="/attack-defense">
+                <Button variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-800">Attack/Defense Guide</Button>
+              </Link>
+            </li>
           </ul>
         </nav>
       </div>
