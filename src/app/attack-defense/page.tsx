@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Header from "../components/Header";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Server, Box, Users, Clock, Shield, Zap } from "lucide-react";
 
 interface SectionProps {
@@ -13,8 +13,6 @@ interface SectionProps {
 }
 
 const ADInfoPage: React.FC = () => {
-    const [activeSection, setActiveSection] = useState<string | null>(null);
-
     const sections: SectionProps[] = [
         {
             title: "Gameserver",
@@ -120,47 +118,36 @@ const ADInfoPage: React.FC = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white overflow-hidden">
+        <div className="min-h-screen bg-gray-900 text-white">
             <Header />
-            <main className="container mx-auto px-4 py-20">
+            <main className="container mx-auto px-4 py-12 sm:py-20">
                 <motion.h1
                     initial={{ opacity: 0, y: -50 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="text-5xl md:text-7xl font-bold pt-16 mb-20 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600"
-                >
+                    className="text-4xl sm:text-5xl md:text-7xl font-bold mb-12 sm:mb-20 pt-16 sm:pt-24 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600"                >
                     Attack/Defense CTF Guide
                 </motion.h1>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {sections.map((section, index) => (
                         <motion.div
                             key={section.title}
                             initial={{ opacity: 0, y: 50 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
-                            className={`bg-gray-800 rounded-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 ${activeSection === section.title ? 'ring-4 ring-opacity-50' : ''
-                                }`}
-                            style={{ boxShadow: `0 0 20px rgba(${section.color.split('-')[2].slice(0, -3)}, 0.3)` }}
-                            onClick={() => setActiveSection(activeSection === section.title ? null : section.title)}
+                            className="bg-gray-800 rounded-lg overflow-hidden shadow-lg"
+                            style={{ boxShadow: `0 4px 20px rgba(${section.color.split('-')[2].slice(0, -3)}, 0.3)` }}
                         >
                             <div className={`h-2 bg-gradient-to-r ${section.color}`} />
                             <div className="p-6">
-                                <section.Icon className="w-12 h-12 mb-4 text-gray-300" />
-                                <h2 className="text-2xl font-bold mb-2">{section.title}</h2>
-                                <AnimatePresence>
-                                    {activeSection === section.title && (
-                                        <motion.div
-                                            initial={{ opacity: 0, height: 0 }}
-                                            animate={{ opacity: 1, height: 'auto' }}
-                                            exit={{ opacity: 0, height: 0 }}
-                                            transition={{ duration: 0.3 }}
-                                            className="mt-4 text-gray-300"
-                                        >
-                                            {section.content}
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
+                                <div className="flex items-center mb-4">
+                                    <section.Icon className="w-8 h-8 mr-4 text-gray-300" />
+                                    <h2 className="text-2xl font-bold">{section.title}</h2>
+                                </div>
+                                <div className="text-gray-300">
+                                    {section.content}
+                                </div>
                             </div>
                         </motion.div>
                     ))}
