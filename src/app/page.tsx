@@ -10,7 +10,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { db, analytics } from "@/utils/firebase";
 import { collection, addDoc } from "firebase/firestore";
-import { logEvent, setUserProperties, Analytics } from "firebase/analytics";
+import { logEvent, setUserProperties } from "firebase/analytics";
+import { useSearchParams } from 'next/navigation';
+import Header from "./components/Header";
 
 const Home: NextPage = () => {
   const [name, setName] = useState("");
@@ -18,6 +20,7 @@ const Home: NextPage = () => {
   const [company, setCompany] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     // Log page view
@@ -28,7 +31,12 @@ const Home: NextPage = () => {
         page_path: window.location.pathname
       });
     }
-  }, []);
+
+    // Check for #beta-signup in the URL and scroll if present
+    if (window.location.hash === '#beta-signup') {
+      scrollToForm();
+    }
+  }, [searchParams]);
 
   const features = [
     { icon: Binary, title: "Train", content: "Access over 100 attack/defense services." },
@@ -128,9 +136,7 @@ const Home: NextPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white overflow-hidden">
       <BackgroundBeams />
       <div className="relative z-10">
-        <header className="py-6">
-          {/* Header content */}
-        </header>
+        <Header />
 
         <main className="container mx-auto px-4 py-20">
           <motion.div
@@ -191,7 +197,7 @@ const Home: NextPage = () => {
           </motion.div>
         </main>
 
-        <section className="container mx-auto px-4 py-20" ref={formRef}>
+        <section className="container mx-auto px-4 py-20" ref={formRef} id="beta-signup">
           <motion.div
             initial="hidden"
             animate="visible"
@@ -257,13 +263,13 @@ const Home: NextPage = () => {
               </CardContent>
             </Card>
           </motion.div>
+          
         </section>
 
         <footer className="container mx-auto py-8 text-center text-gray-400">
           <p>&copy; 2024 BLACKSLASH TECHNOLOGY INC. All rights reserved.</p>
         </footer>
       </div>
-
     </div>
   );
 };
