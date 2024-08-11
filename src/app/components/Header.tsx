@@ -1,13 +1,18 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
 import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -53,28 +58,36 @@ const Header = () => {
           </svg>
         </button>
       </div>
-      {isMenuOpen && (
-        <div className="md:hidden">
-          <nav className="flex flex-col space-y-4 px-4 py-4 bg-gray-900">
-            {navItems.map((item) => (
-              <li key={item.path} className="list-none">
-                <Link href={item.path}>
-                  <Button
-                    variant="ghost"
-                    className={`w-full text-left ${
-                      pathname === item.path
-                        ? "text-white bg-gray-800"
-                        : "text-gray-300 hover:text-white hover:bg-gray-800"
-                    }`}
-                  >
-                    {item.name}
-                  </Button>
-                </Link>
-              </li>
-            ))}
-          </nav>
-        </div>
-      )}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden overflow-hidden"
+          >
+            <nav className="flex flex-col space-y-4 px-4 py-4 bg-gray-900">
+              {navItems.map((item) => (
+                <li key={item.path} className="list-none">
+                  <Link href={item.path}>
+                    <Button
+                      variant="ghost"
+                      className={`w-full text-left ${
+                        pathname === item.path
+                          ? "text-white bg-gray-800"
+                          : "text-gray-300 hover:text-white hover:bg-gray-800"
+                      }`}
+                    >
+                      {item.name}
+                    </Button>
+                  </Link>
+                </li>
+              ))}
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };
