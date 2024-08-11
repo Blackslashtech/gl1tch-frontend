@@ -139,9 +139,8 @@ const ADInfoPage: React.FC = () => {
                             initial={{ opacity: 0, y: 50 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
-                            className={`bg-gray-800 rounded-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 ${
-                                activeSection === section.title ? 'ring-4 ring-opacity-50' : ''
-                            }`}
+                            className={`bg-gray-800 rounded-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 ${activeSection === section.title ? 'ring-4 ring-opacity-50' : ''
+                                }`}
                             style={{ boxShadow: `0 0 20px rgba(${section.color.split('-')[2].slice(0, -3)}, 0.3)` }}
                             onClick={() => setActiveSection(activeSection === section.title ? null : section.title)}
                         >
@@ -168,7 +167,7 @@ const ADInfoPage: React.FC = () => {
                 </div>
             </main>
             <footer className="container mx-auto py-8 text-center text-gray-400">
-                <p>Glitch Range Attack/Defense Guide, by Blackslash Tech</p>
+                <p>&copy; 2024 BLACKSLASH TECHNOLOGY INC. All rights reserved.</p>
             </footer>
         </div>
     );

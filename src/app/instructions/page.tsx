@@ -218,7 +218,7 @@ const InstructionsPage: React.FC = () => {
                 </main>
 
                 <footer className="container mx-auto py-8 text-center text-gray-400">
-                    <p>Glitch Range, built by Blackslash Tech</p>
+                    <p>&copy; 2024 BLACKSLASH TECHNOLOGY INC. All rights reserved.</p>
                 </footer>
             </div>
         </div>

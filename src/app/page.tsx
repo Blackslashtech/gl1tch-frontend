@@ -260,7 +260,7 @@ const Home: NextPage = () => {
         </section>
 
         <footer className="container mx-auto py-8 text-center text-gray-400">
-          <p>&copy; 2024 GL1TCH RANGE. All rights reserved.</p>
+          <p>&copy; 2024 BLACKSLASH TECHNOLOGY INC. All rights reserved.</p>
         </footer>
       </div>
 

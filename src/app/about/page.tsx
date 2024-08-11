@@ -58,19 +58,19 @@ const AboutPage = () => {
             className="text-center pt-16"
             onViewportEnter={() => logAnalyticsEvent('section_view', { section_name: 'hero' })}
           >
-            <motion.h1 
+            <motion.h1
               className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600"
               variants={itemVariants}
             >
               Attack Defense. For Everyone.
             </motion.h1>
-            <motion.p 
+            <motion.p
               className="text-xl text-gray-300 max-w-2xl mx-auto mb-10"
               variants={itemVariants}
             >
               Infrastructure. That just works.
             </motion.p>
-            <motion.p 
+            <motion.p
               className="text-lg text-gray-400 max-w-3xl mx-auto mb-16"
               variants={itemVariants}
             >
@@ -78,7 +78,7 @@ const AboutPage = () => {
             </motion.p>
           </motion.div>
 
-          
+
           <motion.section
             variants={containerVariants}
             initial="hidden"
@@ -86,14 +86,14 @@ const AboutPage = () => {
             className="mb-20"
             onViewportEnter={() => logAnalyticsEvent('section_view', { section_name: 'our_model' })}
           >
-            <motion.h2 
+            <motion.h2
               className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600"
               variants={itemVariants}
             >
               Our Model
             </motion.h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <motion.div 
+              <motion.div
                 variants={itemVariants}
                 onViewportEnter={() => logAnalyticsEvent('model_view', { model_type: 'self_hosted' })}
               >
@@ -105,7 +105,7 @@ const AboutPage = () => {
                   </CardContent>
                 </Card>
               </motion.div>
-              <motion.div 
+              <motion.div
                 variants={itemVariants}
                 onViewportEnter={() => logAnalyticsEvent('model_view', { model_type: 'cloud_range' })}
               >
@@ -117,7 +117,7 @@ const AboutPage = () => {
                   </CardContent>
                 </Card>
               </motion.div>
-              <motion.div 
+              <motion.div
                 variants={itemVariants}
                 onViewportEnter={() => logAnalyticsEvent('model_view', { model_type: 'onsite_support' })}
               >
@@ -139,7 +139,7 @@ const AboutPage = () => {
             className="mb-20"
             onViewportEnter={() => logAnalyticsEvent('section_view', { section_name: 'deploy_anywhere' })}
           >
-            <motion.h2 
+            <motion.h2
               className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600"
               variants={itemVariants}
             >
@@ -156,7 +156,7 @@ const AboutPage = () => {
         </main>
 
         <footer className="container mx-auto py-8 text-center text-gray-400">
-          <p>Glitch Range, built by Blackslash</p>
+          <p>&copy; 2024 BLACKSLASH TECHNOLOGY INC. All rights reserved.</p>
         </footer>
       </div>
     </div>
