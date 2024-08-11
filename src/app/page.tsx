@@ -1,8 +1,8 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Binary, Boxes, Terminal, ChevronRight } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Binary, Boxes, Terminal, ChevronRight, MessageSquare } from "lucide-react";
 import type { NextPage } from "next";
 import { motion } from "framer-motion";
 import { BackgroundBeams } from "@/components/ui/background-beams";
@@ -139,25 +139,26 @@ const Home: NextPage = () => {
         <Header />
 
         <main className="container mx-auto px-4 py-20">
+          {/* Hero Section */}
           <motion.div
             initial="hidden"
             animate="visible"
             variants={containerVariants}
-            className="text-center"
+            className="text-center mb-20"
           >
-            <motion.h2 
+            <motion.h1 
               className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600"
               variants={itemVariants}
             >
               Cyber Attack/Defense Range
-            </motion.h2>
+            </motion.h1>
             <motion.p 
               className="text-xl text-gray-300 max-w-2xl mx-auto mb-10"
               variants={itemVariants}
             >
               Deploy, train, test, and compete in a unified cyber environment supporting multiple frameworks.
             </motion.p>
-            <motion.div variants={itemVariants}>
+            <motion.div variants={itemVariants} className="flex justify-center space-x-4">
               <Button 
                 size="lg" 
                 className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all duration-300" 
@@ -168,11 +169,23 @@ const Home: NextPage = () => {
               >
                 Sign Up for Beta <ChevronRight className="ml-2" />
               </Button>
+              <Button 
+                size="lg"
+                variant="outline"
+                className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white transition-all duration-300"
+                onClick={() => {
+                  window.open('https://discord.gg/b8ntjcXhJG', '_blank');
+                  logAnalyticsEvent('link_click', { link_type: 'discord' });
+                }}
+              >
+                <MessageSquare className="mr-2 h-5 w-5" /> Join Our Discord
+              </Button>
             </motion.div>
           </motion.div>
 
+          {/* Features Section */}
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20"
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20"
             initial="hidden"
             animate="visible"
             variants={containerVariants}
@@ -184,87 +197,82 @@ const Home: NextPage = () => {
                 onViewportEnter={() => logAnalyticsEvent('feature_view', { feature_title: feature.title })}
               >
                 <Card className="bg-gray-800 border-gray-700 hover:border-blue-500 transition-all duration-300 h-full">
-                  <CardHeader className="flex flex-row items-center pb-2">
-                    <feature.icon className="h-6 w-6 text-blue-400 mr-2" />
-                    <h3 className="text-xl font-bold text-white">{feature.title}</h3>
-                  </CardHeader>
-                  <CardContent>
+                  <CardContent className="p-6">
+                    <feature.icon className="h-8 w-8 text-blue-400 mb-4" />
+                    <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
                     <p className="text-gray-300">{feature.content}</p>
                   </CardContent>
                 </Card>
               </motion.div>
             ))}
           </motion.div>
-        </main>
 
-        <section className="container mx-auto px-4 py-20" ref={formRef} id="beta-signup">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={containerVariants}
-            className="max-w-md mx-auto"
-            onViewportEnter={() => logAnalyticsEvent('form_view')}
-          >
-            <Card className="bg-gray-800 border-gray-700">
-              <CardHeader>
-                <h3 className="text-2xl font-bold text-center text-white">Sign Up for Beta</h3>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <Label htmlFor="name">Name</Label>
-                    <Input
-                      id="name"
-                      type="text"
-                      value={name}
-                      onChange={(e) => {
-                        setName(e.target.value);
-                        logAnalyticsEvent('form_field_interaction', { field_name: 'name' });
-                      }}
-                      required
-                      className="bg-gray-700 border-gray-600 text-white"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                        logAnalyticsEvent('form_field_interaction', { field_name: 'email' });
-                      }}
-                      required
-                      className="bg-gray-700 border-gray-600 text-white"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="company">Entity/Company (Optional)</Label>
-                    <Input
-                      id="company"
-                      type="text"
-                      value={company}
-                      onChange={(e) => {
-                        setCompany(e.target.value);
-                        logAnalyticsEvent('form_field_interaction', { field_name: 'company' });
-                      }}
-                      className="bg-gray-700 border-gray-600 text-white"
-                    />
-                  </div>
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? "Submitting..." : "Sign Up for Beta"}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </motion.div>
-          
-        </section>
+          {/* Beta Signup Form Section */}
+          <section ref={formRef} id="beta-signup" className="max-w-md mx-auto mb-20">
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={containerVariants}
+              onViewportEnter={() => logAnalyticsEvent('form_view')}
+            >
+              <Card className="bg-gray-800 border-gray-700">
+                <CardContent className="p-6">
+                  <h3 className="text-2xl font-bold text-center text-white mb-6">Sign Up for Beta</h3>
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                      <Label htmlFor="name">Name</Label>
+                      <Input
+                        id="name"
+                        type="text"
+                        value={name}
+                        onChange={(e) => {
+                          setName(e.target.value);
+                          logAnalyticsEvent('form_field_interaction', { field_name: 'name' });
+                        }}
+                        required
+                        className="bg-gray-700 border-gray-600 text-white"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="email">Email</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => {
+                          setEmail(e.target.value);
+                          logAnalyticsEvent('form_field_interaction', { field_name: 'email' });
+                        }}
+                        required
+                        className="bg-gray-700 border-gray-600 text-white"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="company">Entity/Company (Optional)</Label>
+                      <Input
+                        id="company"
+                        type="text"
+                        value={company}
+                        onChange={(e) => {
+                          setCompany(e.target.value);
+                          logAnalyticsEvent('form_field_interaction', { field_name: 'company' });
+                        }}
+                        className="bg-gray-700 border-gray-600 text-white"
+                      />
+                    </div>
+                    <Button 
+                      type="submit" 
+                      className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Submitting..." : "Sign Up for Beta"}
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </section>
+        </main>
 
         <footer className="container mx-auto py-8 text-center text-gray-400">
           <p>&copy; 2024 BLACKSLASH TECHNOLOGY INC. All rights reserved.</p>
