@@ -1,11 +1,11 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Header from "../components/Header";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import { analytics } from "@/utils/firebase";
 import { logEvent } from "firebase/analytics";
-import { Cog, Network, Flag, Trophy, Server, BookOpen, ChevronDown } from "lucide-react";
+import { Cog, Network, Flag, Trophy, Server, BookOpen } from "lucide-react";
 import Image from 'next/image';
 
 interface InstructionSectionProps {
@@ -16,8 +16,6 @@ interface InstructionSectionProps {
 }
 
 const InstructionsPage: React.FC = () => {
-    const [activeSection, setActiveSection] = useState<string | null>(null);
-
     useEffect(() => {
         logAnalyticsEvent('page_view', {
             page_title: 'Instructions',
@@ -91,46 +89,42 @@ const InstructionsPage: React.FC = () => {
             icon: BookOpen,
             content: (
                 <div className="space-y-4">
-                    <details>
-                        <summary className="cursor-pointer font-semibold">GET /hosts response</summary>
-                        <pre className="bg-gray-700 p-2 rounded mt-2 overflow-x-auto text-xs">
-                            {JSON.stringify([
-                                {
-                                    "service_name": "simple",
-                                    "service_id": 1,
-                                    "team_id": 1,
-                                    "ip": "10.100.1.1"
-                                },
-                                {
-                                    "service_name": "simple",
-                                    "service_id": 1,
-                                    "team_id": 2,
-                                    "ip": "10.100.2.1"
-                                }
-                            ], null, 2)}
-                        </pre>
-                    </details>
-                    <details>
-                        <summary className="cursor-pointer font-semibold">GET /flagids response</summary>
-                        <pre className="bg-gray-700 p-2 rounded mt-2 overflow-x-auto text-xs">
-                            {JSON.stringify([
-                                {
-                                    "service": "simple",
-                                    "service_id": 1,
-                                    "team_id": 1,
-                                    "tick": 66392,
-                                    "flag_id": "2jitycpb2euu3m8v"
-                                },
-                                {
-                                    "service": "simple",
-                                    "service_id": 1,
-                                    "team_id": 2,
-                                    "tick": 66392,
-                                    "flag_id": "rajafpy4mlajeguz"
-                                }
-                            ], null, 2)}
-                        </pre>
-                    </details>
+                    <h3 className="font-semibold">GET /hosts response:</h3>
+                    <pre className="bg-gray-700 p-2 rounded mt-2 overflow-x-auto text-xs">
+                        {JSON.stringify([
+                            {
+                                "service_name": "simple",
+                                "service_id": 1,
+                                "team_id": 1,
+                                "ip": "10.100.1.1"
+                            },
+                            {
+                                "service_name": "simple",
+                                "service_id": 1,
+                                "team_id": 2,
+                                "ip": "10.100.2.1"
+                            }
+                        ], null, 2)}
+                    </pre>
+                    <h3 className="font-semibold">GET /flagids response:</h3>
+                    <pre className="bg-gray-700 p-2 rounded mt-2 overflow-x-auto text-xs">
+                        {JSON.stringify([
+                            {
+                                "service": "simple",
+                                "service_id": 1,
+                                "team_id": 1,
+                                "tick": 66392,
+                                "flag_id": "2jitycpb2euu3m8v"
+                            },
+                            {
+                                "service": "simple",
+                                "service_id": 1,
+                                "team_id": 2,
+                                "tick": 66392,
+                                "flag_id": "rajafpy4mlajeguz"
+                            }
+                        ], null, 2)}
+                    </pre>
                 </div>
             ),
             color: "from-red-500 to-rose-500",
@@ -179,7 +173,7 @@ const InstructionsPage: React.FC = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.5, delay: 0.2 }}
-                        className="space-y-6"
+                        className="space-y-12"
                     >
                         {sections.map((section, index) => (
                             <motion.div
@@ -187,31 +181,17 @@ const InstructionsPage: React.FC = () => {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: index * 0.1 }}
-                                className={`bg-gray-800 rounded-lg overflow-hidden`}
+                                className={`bg-gray-800 rounded-lg overflow-hidden shadow-lg`}
                             >
-                                <div
-                                    className={`p-6 cursor-pointer bg-gradient-to-r ${section.color} flex items-center justify-between`}
-                                    onClick={() => setActiveSection(activeSection === section.title ? null : section.title)}
-                                >
-                                    <div className="flex items-center">
+                                <div className={`p-6 bg-gradient-to-r ${section.color}`}>
+                                    <div className="flex items-center mb-4">
                                         <section.icon className="w-8 h-8 mr-4" />
                                         <h2 className="text-2xl font-bold">{section.title}</h2>
                                     </div>
-                                    <ChevronDown className={`w-6 h-6 transition-transform duration-300 ${activeSection === section.title ? 'transform rotate-180' : ''}`} />
+                                    <div className="mt-4">
+                                        {section.content}
+                                    </div>
                                 </div>
-                                <AnimatePresence>
-                                    {activeSection === section.title && (
-                                        <motion.div
-                                            initial={{ opacity: 0, height: 0 }}
-                                            animate={{ opacity: 1, height: 'auto' }}
-                                            exit={{ opacity: 0, height: 0 }}
-                                            transition={{ duration: 0.3 }}
-                                            className="p-6 bg-gray-800"
-                                        >
-                                            {section.content}
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
                             </motion.div>
                         ))}
                     </motion.div>
