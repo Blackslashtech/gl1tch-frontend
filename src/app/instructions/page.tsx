@@ -196,7 +196,8 @@ const InstructionsPage: React.FC = () => {
             <BackgroundBeams />
             <div className="relative z-10">
                 <header className="container mx-auto py-8">
-                    <h1 className="text-4xl font-bold">Glitch Range</h1>
+                    <h1 className="text-4xl font-bold"> </h1>
+                    <h1 className="text-4xl font-bold"> </h1>
                 </header>
 
                 <main className="container mx-auto px-4 py-12">
