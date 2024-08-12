@@ -189,57 +189,6 @@ const InstructionsPage: React.FC = () => {
             ),
             color: "from-indigo-500 to-blue-500",
         },
-        {
-            title: "Attack/Defense Guide",
-            icon: "MessageSquare",
-            content: (
-                <>
-                    <h3 className="font-semibold mb-2">Overview:</h3>
-                    <p className="mb-4">Attack/Defense is a real-time offense and defense cyber competition format. Teams secure their services while exploiting others', maintaining service uptime.</p>
-
-                    <h3 className="font-semibold mb-2">Services:</h3>
-                    <ul className="list-disc list-inside mb-4">
-                        <li>Identical set of custom-built services per team</li>
-                        <li>Usually dockerized environments with various programming languages/frameworks</li>
-                        <li>Intentional vulnerabilities (e.g., SQL injection)</li>
-                        <li>Exploit vulnerabilities to extract flags</li>
-                    </ul>
-
-                    <h3 className="font-semibold mb-2">Gameserver:</h3>
-                    <ul className="list-disc list-inside mb-4">
-                        <li>SLA checker per service runs every tick (usually 30-120 seconds)</li>
-                        <li>Checks: place flag, retrieve previous flag, validate service operation</li>
-                        <li>Publishes list of flag IDs for live flags</li>
-                        <li>Flag IDs: unique identifiers (e.g., username, post ID) to access flags</li>
-                    </ul>
-
-                    <h3 className="font-semibold mb-2">Scoring:</h3>
-                    <ul className="list-disc list-inside mb-4">
-                        <li>Points gained by stealing and submitting flags</li>
-                        <li>Points deducted from losing team when flag is stolen</li>
-                        <li>Points awarded for each passed service availability check</li>
-                    </ul>
-
-                    <h3 className="font-semibold mb-2">Strategy:</h3>
-                    <ul className="list-disc list-inside mb-4">
-                        <li>Automation is key due to fast-paced environment</li>
-                        <li>"Throwers": tools to automate flag stealing and submission</li>
-                        <li>Analyze network traffic on own services to identify exploits</li>
-                    </ul>
-
-                    <h3 className="font-semibold mb-2">Skills Developed:</h3>
-                    <ul className="list-disc list-inside">
-                        <li>Source code analysis</li>
-                        <li>Incident response</li>
-                        <li>Exploit development</li>
-                        <li>Automation/scripting</li>
-                        <li>Network security controls</li>
-                        <li>Teamwork and communication</li>
-                    </ul>
-                </>
-            ),
-            color: "from-pink-500 to-purple-500",
-        },
     ];
 
     return (
