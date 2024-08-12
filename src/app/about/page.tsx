@@ -148,10 +148,18 @@ const AboutPage: React.FC = () => {
                     <Users className="h-12 w-12 text-green-400 mb-4" />
                     <h3 className="text-xl font-bold text-white mb-2">Onsite Support</h3>
                     <p className="text-gray-300 mb-4 flex-grow">Planning a big cyber competition and want to make sure everything runs smoothly? We can help. Reach out and we'll work with you to provide a custom solution!</p>
-                    <div className="bg-gray-700 p-4 rounded-md text-center">
-                      <p className="text-lg font-semibold text-white mb-2">Contact Us:</p>
-                      <p className="text-xl text-blue-400 break-all">js@blackslashtech.com</p>
-                    </div>
+                    <a 
+                      href="mailto:js@blackslashtech.com"
+                      onClick={() => logAnalyticsEvent('link_click', { link_type: 'contact_us' })}
+                      className="w-full"
+                    >
+                      <Button 
+                        variant="outline" 
+                        className="w-full"
+                      >
+                        Contact Us
+                      </Button>
+                    </a>
                   </CardContent>
                 </Card>
               </motion.div>
